@@ -10,6 +10,12 @@ import { InputNode } from './nodes/inputNode';
 import { LLMNode } from './nodes/llmNode';
 import { OutputNode } from './nodes/outputNode';
 import { TextNode } from './nodes/textNode';
+import { FilterNode } from './nodes/filterNode';
+import { TransformNode } from './nodes/transformNode';
+import { KnowledgeBaseNode } from './nodes/knowledgeBaseNode';
+import { APICallNode } from './nodes/apiCallNode';
+import { NoteNode } from './nodes/noteNode';
+import { getDefaults } from './nodes/nodeRegistry';
 
 import 'reactflow/dist/style.css';
 
@@ -20,6 +26,11 @@ const nodeTypes = {
   llm: LLMNode,
   customOutput: OutputNode,
   text: TextNode,
+  filter: FilterNode,
+  transform: TransformNode,
+  knowledgeBase: KnowledgeBaseNode,
+  apiCall: APICallNode,
+  note: NoteNode,
 };
 
 const selector = (state) => ({
@@ -45,10 +56,11 @@ export const PipelineUI = () => {
       onConnect
     } = useStore(useShallow(selector));
 
-    const getInitNodeData = (nodeID, type) => {
-      let nodeData = { id: nodeID, nodeType: `${type}` };
-      return nodeData;
-    }
+    const getInitNodeData = (nodeID, type) => ({
+      id: nodeID,
+      nodeType: type,
+      ...getDefaults(type),
+    });
 
     const onDrop = useCallback(
         (event) => {
