@@ -1,5 +1,5 @@
 import { useMemo, useEffect, useRef } from 'react';
-import { Handle, Position } from 'reactflow';
+import { Handle, Position, useUpdateNodeInternals } from 'reactflow';
 import { Type } from 'lucide-react';
 import { BaseNode } from './BaseNode';
 import { TextareaAutoResizeField } from './fields/TextareaAutoResizeField';
@@ -29,6 +29,7 @@ export const TextNode = ({ id, data }) => {
 
   const prevVariablesRef = useRef(variables);
   const pruneEdgesForHandles = useStore((s) => s.pruneEdgesForHandles);
+  const updateNodeInternals = useUpdateNodeInternals();
 
   useEffect(() => {
     const prev = prevVariablesRef.current;
@@ -39,6 +40,10 @@ export const TextNode = ({ id, data }) => {
     }
     prevVariablesRef.current = current;
   }, [variables, id, pruneEdgesForHandles]);
+
+  useEffect(() => {
+    updateNodeInternals(id);
+  }, [variables, id, updateNodeInternals]);
 
   return (
     <BaseNode id={id} data={data} title="Text" icon={Type} handles={[]}>
