@@ -37,8 +37,8 @@ export const BaseNode = ({ id, data, title, icon: Icon, handles = [], children }
             key={handle.id}
             handle={handle}
             index={index}
-            count={sideHandles.length}
             side={side}
+            verticalCount={sideHandles.length}
           />
         ))
       )}
@@ -58,11 +58,20 @@ const groupHandlesBySide = (handles) => {
   return groups;
 };
 
-const getHandleOffset = (index, count) => `${((index + 1) / (count + 1)) * 100}%`;
+// Handles sit in a fixed-pixel region anchored to the top of the card,
+// NOT a percentage of card height. This decouples handle positioning from
+// variable card body heights (e.g. Text node with auto-resize).
+const HANDLE_REGION_TOP_PX = 80;
+const HANDLE_SPACING_PX = 28;
+const getHandleOffset = (index) => `${HANDLE_REGION_TOP_PX + index * HANDLE_SPACING_PX}px`;
 
-const HandleWithLabel = ({ handle, index, count, side }) => {
-  const offset = getHandleOffset(index, count);
+const getHandleOffsetPercent = (index, count) => `${((index + 1) / (count + 1)) * 100}%`;
+
+const HandleWithLabel = ({ handle, index, side, verticalCount }) => {
   const isHorizontal = side === Position.Left || side === Position.Right;
+  const offset = isHorizontal
+    ? getHandleOffset(index)
+    : getHandleOffsetPercent(index, verticalCount);
   const positionStyle = isHorizontal ? { top: offset } : { left: offset };
 
   const labelStyle = isHorizontal
