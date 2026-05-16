@@ -1,5 +1,5 @@
 import { useMemo, useEffect, useRef } from 'react';
-import { Position } from 'reactflow';
+import { Handle, Position } from 'reactflow';
 import { Type } from 'lucide-react';
 import { BaseNode } from './BaseNode';
 import { TextareaAutoResizeField } from './fields/TextareaAutoResizeField';
@@ -27,19 +27,6 @@ const extractVariables = (text) => {
 export const TextNode = ({ id, data }) => {
   const variables = useMemo(() => extractVariables(data.text), [data.text]);
 
-  const handles = useMemo(
-    () => [
-      ...variables.map((name) => ({
-        type: 'target',
-        position: Position.Left,
-        id: `${id}-var-${name}`,
-        label: name,
-      })),
-      { type: 'source', position: Position.Right, id: `${id}-output` },
-    ],
-    [id, variables]
-  );
-
   const prevVariablesRef = useRef(variables);
   const pruneEdgesForHandles = useStore((s) => s.pruneEdgesForHandles);
 
@@ -54,7 +41,15 @@ export const TextNode = ({ id, data }) => {
   }, [variables, id, pruneEdgesForHandles]);
 
   return (
-    <BaseNode id={id} data={data} title="Text" icon={Type} handles={handles}>
+    <BaseNode id={id} data={data} title="Text" icon={Type} handles={[]}>
+      {variables.length > 0 && (
+        <div className="-mx-3 mb-2 space-y-1 border-b border-node-border px-3 pb-2">
+          {variables.map((name) => (
+            <VariableHandleRow key={name} nodeId={id} variableName={name} />
+          ))}
+        </div>
+      )}
+
       <TextareaAutoResizeField
         nodeId={id}
         fieldName="text"
@@ -62,6 +57,26 @@ export const TextNode = ({ id, data }) => {
         value={data.text}
         placeholder="Type text. Use {{ variableName }} to create input handles."
       />
+
+      <Handle
+        type="source"
+        position={Position.Right}
+        id={`${id}-output`}
+        className="!h-2.5 !w-2.5 !border-2 !border-white !bg-accent"
+        style={{ top: '50%' }}
+      />
     </BaseNode>
   );
 };
+
+const VariableHandleRow = ({ nodeId, variableName }) => (
+  <div className="relative -mx-3 flex items-center py-1">
+    <Handle
+      type="target"
+      position={Position.Left}
+      id={`${nodeId}-var-${variableName}`}
+      className="!h-2.5 !w-2.5 !border-2 !border-white !bg-accent"
+    />
+    <span className="pl-6 text-xs text-zinc-700">{variableName}</span>
+  </div>
+);
