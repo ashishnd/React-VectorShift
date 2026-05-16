@@ -51,4 +51,13 @@ export const useStore = create((set, get) => ({
         }),
       });
     },
+    pruneEdgesForHandles: (handleIds) => {
+      if (!handleIds.length) return;
+      const idSet = new Set(handleIds);
+      set({
+        edges: get().edges.filter(
+          (edge) => !idSet.has(edge.targetHandle) && !idSet.has(edge.sourceHandle)
+        ),
+      });
+    },
   }));

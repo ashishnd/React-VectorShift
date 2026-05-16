@@ -17,7 +17,7 @@ export const BaseNode = ({ id, data, title, icon: Icon, handles = [], children }
   const grouped = groupHandlesBySide(handles);
 
   return (
-    <div className="relative min-w-[240px] rounded-md border border-node-border bg-node-bg shadow-node">
+    <div className="relative min-w-[240px] max-w-[400px] rounded-md border border-node-border bg-node-bg shadow-node">
       <div className="px-3 pt-2">
         <span className="inline-block rounded-full bg-accent-muted px-2 py-0.5 text-[10px] font-medium text-accent">
           {badgeId}
