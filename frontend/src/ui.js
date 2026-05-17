@@ -2,7 +2,7 @@
 // Displays the drag-and-drop UI
 // --------------------------------------------------
 
-import { useState, useRef, useCallback } from 'react';
+import { useRef, useCallback } from 'react';
 import ReactFlow, { Controls, Background, MiniMap } from 'reactflow';
 import { useStore } from './store';
 import { useShallow } from 'zustand/react/shallow';
@@ -41,11 +41,12 @@ const selector = (state) => ({
   onNodesChange: state.onNodesChange,
   onEdgesChange: state.onEdgesChange,
   onConnect: state.onConnect,
+  setReactFlowInstance: state.setReactFlowInstance,
 });
 
 export const PipelineUI = () => {
     const reactFlowWrapper = useRef(null);
-    const [reactFlowInstance, setReactFlowInstance] = useState(null);
+    const reactFlowInstance = useStore((s) => s.reactFlowInstance);
     const {
       nodes,
       edges,
@@ -53,7 +54,8 @@ export const PipelineUI = () => {
       addNode,
       onNodesChange,
       onEdgesChange,
-      onConnect
+      onConnect,
+      setReactFlowInstance,
     } = useStore(useShallow(selector));
 
     const getInitNodeData = (nodeID, type) => ({
@@ -102,7 +104,7 @@ export const PipelineUI = () => {
 
     return (
         <>
-        <div ref={reactFlowWrapper} style={{width: '100vw', height: '70vh'}}>
+        <div ref={reactFlowWrapper} style={{ width: '100vw', height: '70vh' }} className="relative">
             <ReactFlow
                 nodes={nodes}
                 edges={edges}
@@ -117,10 +119,18 @@ export const PipelineUI = () => {
                 snapGrid={[gridSize, gridSize]}
                 connectionLineType='smoothstep'
             >
-                <Background color="#aaa" gap={gridSize} />
+                <Background color="#cbd5e1" gap={gridSize} size={1.5} />
                 <Controls />
                 <MiniMap pannable zoomable />
             </ReactFlow>
+            {nodes.length === 0 && (
+              <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
+                <div className="text-center text-sm text-zinc-400">
+                  <p className="mb-1 font-medium">Your canvas is empty</p>
+                  <p className="text-xs">Click or drag a node from the toolbar to get started</p>
+                </div>
+              </div>
+            )}
         </div>
         </>
     )
