@@ -12,6 +12,8 @@ export const useStore = create((set, get) => ({
     nodes: [],
     edges: [],
     nodeIDs: {},
+    reactFlowInstance: null,
+    setReactFlowInstance: (instance) => set({ reactFlowInstance: instance }),
     getNodeID: (type) => {
         const newIDs = {...get().nodeIDs};
         if (newIDs[type] === undefined) {
@@ -57,6 +59,14 @@ export const useStore = create((set, get) => ({
       set({
         edges: get().edges.filter(
           (edge) => !idSet.has(edge.targetHandle) && !idSet.has(edge.sourceHandle)
+        ),
+      });
+    },
+    removeNode: (nodeId) => {
+      set({
+        nodes: get().nodes.filter((node) => node.id !== nodeId),
+        edges: get().edges.filter(
+          (edge) => edge.source !== nodeId && edge.target !== nodeId
         ),
       });
     },
