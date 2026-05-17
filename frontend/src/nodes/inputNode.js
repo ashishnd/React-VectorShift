@@ -10,7 +10,7 @@ export const InputNode = ({ id, data }) => (
     data={data}
     title="Input"
     icon={LogIn}
-    handles={[{ type: 'source', position: Position.Right, id: `${id}-value` }]}
+    handles={[{ type: 'source', position: Position.Right, id: `${id}-value`, label: 'value' }]}
   >
     <TextField nodeId={id} fieldName="inputName" label="Name" value={data.inputName} />
     <SelectField

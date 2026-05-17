@@ -10,8 +10,8 @@ export const TransformNode = ({ id, data }) => (
     title="Transform"
     icon={Wand2}
     handles={[
-      { type: 'target', position: Position.Left, id: `${id}-input` },
-      { type: 'source', position: Position.Right, id: `${id}-output` },
+      { type: 'target', position: Position.Left, id: `${id}-input`, label: 'text' },
+      { type: 'source', position: Position.Right, id: `${id}-output`, label: 'result' },
     ]}
   >
     <SelectField

@@ -11,8 +11,8 @@ export const FilterNode = ({ id, data }) => (
     title="Filter"
     icon={FilterIcon}
     handles={[
-      { type: 'target', position: Position.Left, id: `${id}-input` },
-      { type: 'source', position: Position.Right, id: `${id}-output` },
+      { type: 'target', position: Position.Left, id: `${id}-input`, label: 'text' },
+      { type: 'source', position: Position.Right, id: `${id}-output`, label: 'result' },
     ]}
   >
     <SelectField

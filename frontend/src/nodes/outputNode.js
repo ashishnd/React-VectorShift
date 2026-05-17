@@ -10,7 +10,7 @@ export const OutputNode = ({ id, data }) => (
     data={data}
     title="Output"
     icon={LogOut}
-    handles={[{ type: 'target', position: Position.Left, id: `${id}-value` }]}
+    handles={[{ type: 'target', position: Position.Left, id: `${id}-value`, label: 'value' }]}
   >
     <TextField nodeId={id} fieldName="outputName" label="Name" value={data.outputName} />
     <SelectField
