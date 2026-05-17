@@ -4,13 +4,16 @@ import { formatNodeBadgeId } from './nodeRegistry';
 /**
  * Shared shell for pipeline nodes (card, badge, header, handles, body).
  *
+ * Handles are positioned proportionally within a body region (the wrapper
+ * around children), NOT absolutely from the card top.
+ *
  * @param {object} props
- * @param {string} props.id - React Flow node ID (e.g. customInput-1)
+ * @param {string} props.id - React Flow node ID
  * @param {object} props.data - React Flow node data (must include nodeType)
- * @param {string} props.title - Header title (e.g. "Input")
- * @param {import('lucide-react').LucideIcon} [props.icon] - Optional lucide icon in header
+ * @param {string} props.title - Header title
+ * @param {import('lucide-react').LucideIcon} [props.icon]
  * @param {Array<{ type: 'source'|'target', position: import('reactflow').Position, id: string, label?: string }>} [props.handles]
- * @param {import('react').ReactNode} props.children - Field UI rendered in the body
+ * @param {import('react').ReactNode} props.children
  */
 export const BaseNode = ({ id, data, title, icon: Icon, handles = [], children }) => {
   const badgeId = formatNodeBadgeId(id, data?.nodeType);
@@ -29,19 +32,21 @@ export const BaseNode = ({ id, data, title, icon: Icon, handles = [], children }
         <span className="text-sm font-semibold text-zinc-800">{title}</span>
       </header>
 
-      <div className="space-y-3 p-3">{children}</div>
+      <div className="relative min-h-[80px]">
+        <div className="space-y-3 p-3">{children}</div>
 
-      {Object.entries(grouped).map(([side, sideHandles]) =>
-        sideHandles.map((handle, index) => (
-          <HandleWithLabel
-            key={handle.id}
-            handle={handle}
-            index={index}
-            side={side}
-            verticalCount={sideHandles.length}
-          />
-        ))
-      )}
+        {Object.entries(grouped).map(([side, sideHandles]) =>
+          sideHandles.map((handle, index) => (
+            <HandleWithLabel
+              key={handle.id}
+              handle={handle}
+              index={index}
+              count={sideHandles.length}
+              side={side}
+            />
+          ))
+        )}
+      </div>
     </div>
   );
 };
@@ -58,20 +63,11 @@ const groupHandlesBySide = (handles) => {
   return groups;
 };
 
-// Handles sit in a fixed-pixel region anchored to the top of the card,
-// NOT a percentage of card height. This decouples handle positioning from
-// variable card body heights (e.g. Text node with auto-resize).
-const HANDLE_REGION_TOP_PX = 80;
-const HANDLE_SPACING_PX = 28;
-const getHandleOffset = (index) => `${HANDLE_REGION_TOP_PX + index * HANDLE_SPACING_PX}px`;
+const getHandleOffset = (index, count) => `${((index + 1) / (count + 1)) * 100}%`;
 
-const getHandleOffsetPercent = (index, count) => `${((index + 1) / (count + 1)) * 100}%`;
-
-const HandleWithLabel = ({ handle, index, side, verticalCount }) => {
+const HandleWithLabel = ({ handle, index, count, side }) => {
+  const offset = getHandleOffset(index, count);
   const isHorizontal = side === Position.Left || side === Position.Right;
-  const offset = isHorizontal
-    ? getHandleOffset(index)
-    : getHandleOffsetPercent(index, verticalCount);
   const positionStyle = isHorizontal ? { top: offset } : { left: offset };
 
   const labelStyle = isHorizontal

@@ -46,7 +46,13 @@ export const TextNode = ({ id, data }) => {
   }, [variables, id, updateNodeInternals]);
 
   return (
-    <BaseNode id={id} data={data} title="Text" icon={Type} handles={[]}>
+    <BaseNode
+      id={id}
+      data={data}
+      title="Text"
+      icon={Type}
+      handles={[{ type: 'source', position: Position.Right, id: `${id}-output` }]}
+    >
       {variables.length > 0 && (
         <div className="-mx-3 mb-2 space-y-1 border-b border-node-border px-3 pb-2">
           {variables.map((name) => (
@@ -61,14 +67,6 @@ export const TextNode = ({ id, data }) => {
         label="Text"
         value={data.text}
         placeholder="Type text. Use {{ variableName }} to create input handles."
-      />
-
-      <Handle
-        type="source"
-        position={Position.Right}
-        id={`${id}-output`}
-        className="!h-2.5 !w-2.5 !border-2 !border-white !bg-accent"
-        style={{ top: '50%' }}
       />
     </BaseNode>
   );
