@@ -40,15 +40,17 @@ export const SubmitButton = () => {
 
   return (
     <>
-      <div className="flex items-center justify-center py-4">
-        <button
-          type="button"
-          onClick={handleSubmit}
-          disabled={isSubmitting}
-          className="inline-flex items-center gap-2 rounded-md bg-accent px-5 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          {isSubmitting ? 'Submitting...' : 'Submit Pipeline'}
-        </button>
+      <div className="border-t border-node-border bg-white px-6 py-4">
+        <div className="flex items-center justify-center">
+          <button
+            type="button"
+            onClick={handleSubmit}
+            disabled={isSubmitting}
+            className="inline-flex items-center gap-2 rounded-md bg-accent px-5 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {isSubmitting ? 'Submitting...' : 'Submit Pipeline'}
+          </button>
+        </div>
       </div>
 
       {(result || error) && (
