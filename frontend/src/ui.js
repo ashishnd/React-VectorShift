@@ -119,7 +119,7 @@ export const PipelineUI = () => {
             >
                 <Background color="#aaa" gap={gridSize} />
                 <Controls />
-                <MiniMap />
+                <MiniMap pannable zoomable />
             </ReactFlow>
         </div>
         </>
