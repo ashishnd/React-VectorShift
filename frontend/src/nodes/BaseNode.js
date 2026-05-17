@@ -1,7 +1,7 @@
 import { Handle, Position } from 'reactflow';
 import { X } from 'lucide-react';
 import { useStore } from '../store';
-import { formatNodeBadgeId } from './nodeRegistry';
+import { formatNodeBadgeId, getDescription } from './nodeRegistry';
 
 /**
  * Shared shell for pipeline nodes (card, badge, header, handles, body).
@@ -25,29 +25,36 @@ import { formatNodeBadgeId } from './nodeRegistry';
  */
 export const BaseNode = ({ id, data, title, icon: Icon, handles = [], children }) => {
   const badgeId = formatNodeBadgeId(id, data?.nodeType);
+  const description = getDescription(data?.nodeType);
   const grouped = groupHandlesBySide(handles);
   const removeNode = useStore((s) => s.removeNode);
 
   return (
     <div className="relative min-w-[240px] max-w-[400px] rounded-md border border-node-border bg-node-bg shadow-node transition-shadow hover:shadow-md">
-      <button
-        type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          removeNode(id);
-        }}
-        className="absolute right-2 top-2 z-20 inline-flex h-5 w-5 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-400 shadow-sm transition hover:border-zinc-300 hover:bg-zinc-50 hover:text-zinc-700"
-        aria-label="Remove node"
-      >
-        <X className="h-3.5 w-3.5" strokeWidth={2.5} />
-      </button>
-
-      <div className="flex items-center gap-2 px-3 pt-3">
-        {Icon && <Icon className="h-4 w-4 shrink-0 text-accent" strokeWidth={2} />}
-        <span className="text-sm font-semibold text-zinc-800">{title}</span>
+      <div className="rounded-t-md border-b border-node-border bg-accent-muted/30 px-3 py-3">
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex min-w-0 items-center gap-2">
+            {Icon && <Icon className="h-5 w-5 shrink-0 text-accent" strokeWidth={2} />}
+            <span className="text-base font-semibold text-zinc-900">{title}</span>
+          </div>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              removeNode(id);
+            }}
+            className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white text-zinc-500 shadow-sm transition hover:border-zinc-400 hover:bg-zinc-50 hover:text-zinc-800"
+            aria-label="Remove node"
+          >
+            <X className="h-3 w-3" strokeWidth={2.5} />
+          </button>
+        </div>
+        {description && (
+          <p className="mt-1.5 text-xs leading-relaxed text-zinc-600">{description}</p>
+        )}
       </div>
 
-      <div className="border-b border-node-border px-3 pb-2 pt-1.5">
+      <div className="border-b border-node-border px-3 py-2">
         <div className="rounded bg-accent-muted/50 px-2 py-1 text-center font-mono text-xs font-medium text-accent">
           {badgeId}
         </div>

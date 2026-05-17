@@ -13,9 +13,5 @@ export const LLMNode = ({ id, data }) => (
       { type: 'target', position: Position.Left, id: `${id}-prompt`, label: 'prompt' },
       { type: 'source', position: Position.Right, id: `${id}-response`, label: 'response' },
     ]}
-  >
-    <p className="text-xs text-zinc-600">
-      Generates a response from a language model.
-    </p>
-  </BaseNode>
+  />
 );
