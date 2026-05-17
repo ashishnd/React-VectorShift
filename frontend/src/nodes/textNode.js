@@ -30,6 +30,15 @@ export const TextNode = ({ id, data }) => {
   const prevVariablesRef = useRef(variables);
   const pruneEdgesForHandles = useStore((s) => s.pruneEdgesForHandles);
   const updateNodeInternals = useUpdateNodeInternals();
+  const edges = useStore((s) => s.edges);
+  const connectedHandleIds = useMemo(() => {
+    const set = new Set();
+    edges.forEach((edge) => {
+      if (edge.sourceHandle) set.add(edge.sourceHandle);
+      if (edge.targetHandle) set.add(edge.targetHandle);
+    });
+    return set;
+  }, [edges]);
 
   useEffect(() => {
     const prev = prevVariablesRef.current;
@@ -56,7 +65,12 @@ export const TextNode = ({ id, data }) => {
       {variables.length > 0 && (
         <div className="-mx-3 mb-2 space-y-1 border-b border-node-border px-3 pb-2">
           {variables.map((name) => (
-            <VariableHandleRow key={name} nodeId={id} variableName={name} />
+            <VariableHandleRow
+              key={name}
+              nodeId={id}
+              variableName={name}
+              isConnected={connectedHandleIds.has(`${id}-var-${name}`)}
+            />
           ))}
         </div>
       )}
@@ -72,14 +86,21 @@ export const TextNode = ({ id, data }) => {
   );
 };
 
-const VariableHandleRow = ({ nodeId, variableName }) => (
-  <div className="relative -mx-3 flex items-center py-1">
-    <Handle
-      type="target"
-      position={Position.Left}
-      id={`${nodeId}-var-${variableName}`}
-      className="!h-2.5 !w-2.5 !border-2 !border-white !bg-accent"
-    />
-    <span className="pl-6 text-xs text-zinc-700">{variableName}</span>
-  </div>
-);
+const VariableHandleRow = ({ nodeId, variableName, isConnected }) => {
+  const handleClass = isConnected
+    ? '!h-3.5 !w-3.5 !border-2 !border-accent !bg-accent'
+    : '!h-3.5 !w-3.5 !border-2 !border-accent !bg-white';
+
+  return (
+    <div className="relative -mx-3 flex items-center py-1">
+      <Handle
+        type="target"
+        position={Position.Left}
+        id={`${nodeId}-var-${variableName}`}
+        className={handleClass}
+        style={{ left: 0, transform: 'translate(-50%, -50%)' }}
+      />
+      <span className="pl-6 text-xs text-zinc-700">{variableName}</span>
+    </div>
+  );
+};
