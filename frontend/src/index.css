@@ -11,3 +11,14 @@
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
   }
 }
+
+@layer components {
+  .react-flow__node.selected > div {
+    @apply border-accent shadow-md ring-2 ring-accent ring-offset-2 ring-offset-canvas;
+  }
+
+  .react-flow__edge.selected .react-flow__edge-path {
+    stroke: theme('colors.accent.DEFAULT') !important;
+    stroke-width: 2.5 !important;
+  }
+}
