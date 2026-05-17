@@ -19,6 +19,7 @@ export const NODE_REGISTRY = {
     displayLabel: 'input',
     icon: LogIn,
     category: 'I/O',
+    description: 'Pass data of different types into your workflow',
     defaults: { inputName: 'input_1', inputType: 'Text' },
   },
   customOutput: {
@@ -26,6 +27,7 @@ export const NODE_REGISTRY = {
     displayLabel: 'output',
     icon: LogOut,
     category: 'I/O',
+    description: 'Surface a final result from the workflow',
     defaults: { outputName: 'output_1', outputType: 'Text' },
   },
   llm: {
@@ -33,6 +35,7 @@ export const NODE_REGISTRY = {
     displayLabel: 'llm',
     icon: Sparkles,
     category: 'AI',
+    description: 'Generate a response from a language model',
     defaults: {},
   },
   text: {
@@ -40,6 +43,7 @@ export const NODE_REGISTRY = {
     displayLabel: 'text',
     icon: Type,
     category: 'Data',
+    description: 'Combine static text with input variables using {{ name }}',
     defaults: { text: '{{input}}' },
   },
   filter: {
@@ -47,6 +51,7 @@ export const NODE_REGISTRY = {
     displayLabel: 'filter',
     icon: FilterIcon,
     category: 'Logic',
+    description: 'Pass data through only if it matches a condition',
     defaults: { condition: 'contains', pattern: '' },
   },
   transform: {
@@ -54,6 +59,7 @@ export const NODE_REGISTRY = {
     displayLabel: 'transform',
     icon: Wand2,
     category: 'Logic',
+    description: 'Apply a string transformation to incoming data',
     defaults: { operation: 'uppercase' },
   },
   knowledgeBase: {
@@ -61,6 +67,7 @@ export const NODE_REGISTRY = {
     displayLabel: 'kb',
     icon: Database,
     category: 'Data',
+    description: 'Retrieve relevant context from a knowledge base',
     defaults: { kbName: '', topK: 5 },
   },
   apiCall: {
@@ -68,6 +75,7 @@ export const NODE_REGISTRY = {
     displayLabel: 'api',
     icon: Globe,
     category: 'Integration',
+    description: 'Make an HTTP request to an external endpoint',
     defaults: { method: 'GET' },
   },
   note: {
@@ -75,6 +83,7 @@ export const NODE_REGISTRY = {
     displayLabel: 'note',
     icon: StickyNote,
     category: 'Utility',
+    description: 'Annotate your pipeline with context for teammates',
     defaults: { note: '' },
   },
 };
@@ -84,6 +93,9 @@ export const getDisplayLabel = (nodeType) =>
 
 export const getDefaults = (nodeType) =>
   NODE_REGISTRY[nodeType]?.defaults ?? {};
+
+export const getDescription = (nodeType) =>
+  NODE_REGISTRY[nodeType]?.description ?? '';
 
 export const formatNodeBadgeId = (reactFlowId, nodeType) => {
   const displayLabel = getDisplayLabel(nodeType);
